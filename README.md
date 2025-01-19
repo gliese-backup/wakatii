@@ -18,3 +18,9 @@ npm run deploy
 6- bun lint:fix
 
 7- bun lint
+
+
+### Zod OpenAPI Hono
+
+npm i @hono/zod-openapi
+
