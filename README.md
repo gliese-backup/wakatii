@@ -24,3 +24,11 @@ npm run deploy
 
 npm i @hono/zod-openapi
 
+
+8- stoker 
+bun add stoker {installation}
+
+
+9- bun add hono
+```bun add hono-pino```
+

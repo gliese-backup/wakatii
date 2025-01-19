@@ -1,24 +1,29 @@
-import { Hono } from 'hono'
+import { OpenAPIHono } from '@hono/zod-openapi';
+import { pinoLogger } from 'hono-pino';
+// import { logger } from 'hono/logger';
+import { notFound, onError } from 'stoker/middlewares';
 
-const app = new Hono()
+const app = new OpenAPIHono();
 
-app.get('/', async (c) => {
-  return c.json({ message: 'Wakati API is active' })
-})
+function logger() {
+  return pinoLogger({
+    http: {
+      reqId: () => crypto.randomUUID(),
+    },
+  });
+}
 
-app.post('/analyze', async (c) => {
-  const body = await c.req.json()
+// app.use(pinoLogger());
+app.use(logger());
+app.notFound(notFound);
+app.onError(onError);
 
-  const result = await c.env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
-    messages: [
-      {
-        role: 'user',
-        content: body.prompt,
-      },
-    ],
-  })
+app.get('/err', (c) => {
+  throw new Error("What's this");
+});
 
-  return c.json({ result })
-})
+app.get('/', (c) => {
+  return c.json({ message: 'Hello from our API' });
+});
 
-export default app
+export default app;
