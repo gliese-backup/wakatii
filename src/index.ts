@@ -1,29 +1,20 @@
-import { OpenAPIHono } from '@hono/zod-openapi';
-import { pinoLogger } from 'hono-pino';
-// import { logger } from 'hono/logger';
-import { notFound, onError } from 'stoker/middlewares';
+import createApp from "@/lib/create-app";
+import configureOpenAPI from "./lib/configure-openapi";
 
-const app = new OpenAPIHono();
+const app = createApp();
 
-function logger() {
-  return pinoLogger({
-    http: {
-      reqId: () => crypto.randomUUID(),
-    },
-  });
-}
+configureOpenAPI(app);
 
-// app.use(pinoLogger());
-app.use(logger());
-app.notFound(notFound);
-app.onError(onError);
-
-app.get('/err', (c) => {
+app.get("/err", (c) => {
   throw new Error("What's this");
 });
 
-app.get('/', (c) => {
-  return c.json({ message: 'Hello from our API' });
+app.get("/", (c) => {
+  return c.json({ message: "Hello from our API" });
+});
+
+app.get("/analyze", (c) => {
+  return c.json({ message: "Working api " });
 });
 
 export default app;
